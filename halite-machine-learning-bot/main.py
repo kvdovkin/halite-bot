@@ -70,7 +70,7 @@ CONVERT, SPAWN = ShipAction.CONVERT, ShipyardAction.SPAWN
 action_map = {'': 0, 'NORTH': 1, 'EAST': 2, 'SOUTH': 3, 'WEST': 4, 'CONVERT': 5, 'SPAWN': 6}
 action_map2 = {None: 0, NORTH: 1, EAST: 2, SOUTH: 3, WEST: 4, CONVERT: 5, SPAWN: 6}
 
-print("{:.0f} ms - load to point F".format((perf_counter() - start_time)*1e3))
+print("Loading weights (weights.pth). {:.0f} ms - Stage F".format((perf_counter() - start_time)*1e3))
 
 #-------------- Data/Model SECTION ------------------#
 
@@ -479,15 +479,14 @@ def find_steps_to(point1: Point, point2: Point) -> List[Point]:
         
     return result
 
-print("{:.0f} ms - load to point G".format((perf_counter() - start_time)*1e3))
+print("Loading weights (weights.pth). {:.0f} ms - Stage G".format((perf_counter() - start_time)*1e3))
 
 #-------------- CREATE MODEL SECTION ------------------#
 
 model = Unet(encoder_name="efficientnet-b0", classes=5, encoder_depth=2, decoder_channels=(64, 32), in_channels=64, encoder_weights=None)
 
-print("{:.0f} ms - load to point H".format((perf_counter() - start_time)*1e3))
+print("Loading weights (weights.pth). {:.0f} ms - Stage H".format((perf_counter() - start_time)*1e3))
 
-#print(f"Файлы в папке: {os.listdir(os.curdir)}")
 model.load_state_dict(torch.load("halite-machine-learning-bot/weights.pth", torch.device(device))['model_state_dict'])
 model.to(device)
 model.eval();
@@ -499,7 +498,7 @@ class Turn_Info:
 
 turn = Turn_Info()
 
-print("{:.0f} ms - load time before 1st step".format((perf_counter() - start_time)*1e3))
+print("Weights loaded. {:.0f} ms - load time before 1st step".format((perf_counter() - start_time)*1e3))
 
 steps_since_slow_epoch = 0
 
@@ -525,12 +524,8 @@ def agent(obs, config):
     # convert to game format
     step, halite, ship, base, cargo, ph, threat = processStep3(obs, conf, config)
 
-    # print('Step',step)
-
     # check if we will do TTA this step
     do_tta = (step >= TTA_START_STEP) and (steps_since_slow_epoch >= TTA_STABLE_STEPS)
-
-    # print("{:.0f} ms - model about to predict".format((perf_counter() - start_time)*1e3))
 
     # featurise
     input_stack = getInputStack3(obs, step, halite, ship, base, cargo, ph, threat, action_map, first_player = obs['player'])
@@ -563,8 +558,6 @@ def agent(obs, config):
         nn_ship_actions[4] = randomtoroidalcrop_single(nn_ship_actions[4], -5, -5)
             
         nn_ship_actions = softmax_scipy(nn_ship_actions, axis=1)[:,:,5:26,5:26] 
-
-    # print("{:.0f} ms - model predicted".format((perf_counter() - start_time)*1e3))
     
     actions = {}
     
@@ -577,7 +570,6 @@ def agent(obs, config):
         all_ships.update(obs['players'][player][SHIPS])
     ship_list = list(my_ships.items())
     base_list = list(my_bases.items())
-    # print('Base list: ',base_list)
     ship_id_to_idx = {ship_key: ship_idx for ship_idx, (ship_key, ship_info) in enumerate(ship_list)}
 
     # score matrix -- can only pick valid actions
@@ -717,9 +709,7 @@ def agent(obs, config):
                 break
 
         if (protectors[sy][1][0] < attackers[sy][1][0] < protectors[sy][1][0] + 3) or (protectors[sy][1][0] == attackers[sy][1][0] and -protectors[sy][1][-1] <= -attackers[sy][1][-1]):
-            print(f'{attackers[sy][0]} is close to {sy.id} at ({syx, syy}) (d={attackers[sy][1][0]}). Sending {protectors[sy][0]} (d={protectors[sy][1][0]})')
             acts = find_steps_to(Point(x,y), Point(syx, syy))
-            print(f'Current position = ({x}, {y}), actions = {acts}')
             ship_idx = ship_id_to_idx[protectors[sy][0]]
             if len(acts) > 0:
                 C[ship_idx, x + size*y] -= 20000 # not idle
@@ -787,8 +777,7 @@ def agent(obs, config):
                     elif c(y-yt) == 1: a = 'NORTH'
                     if a is not None:
                         actions[ship_key] = a
-                    else:
-                        print('   says to move but where???')
+                    
                     turn.taken[move(board.ships[ship_key].position, act(a))] = 1 
 
 
@@ -804,9 +793,6 @@ def agent(obs, config):
                 actions[base_key] = 'SPAWN'
                 spawning_str += '({},{})'.format(*xy(base_info))
                 turn.taken[board.shipyards[base_key].position] = 1
-                #print('spawning a ship at {},{}'.format(*xy(base_info)))
-            else:
-                print('assigned to spawn at {}, {} but no cash on hand'.format(*xy(base_info)))
     # -------------------------------------------------------#
 
     #--------------- PROTECTOR SECTION --------------------#
@@ -829,16 +815,6 @@ def agent(obs, config):
             protecting_str += "{} at ({},{}), ".format(ship_key, x, y)
         else:
             moving_str += '{} from ({},{}) to ({},{}), '.format(ship_key, x, y, xt, yt)
-
-    # if len(remaining_str) > 0: print("Ships mining:", remaining_str)    
-    # if len(moving_str) > 0: print("Ships moving:", moving_str)
-    # if len(protecting_str) > 0: print("Ships protecting:", protecting_str)
-    # if len(converting_str) > 0: print("Ships converting to base:", converting_str)
-    # if len(spawning_str) > 0: print("Ships spawning:", spawning_str)
-
-    # print('Actions: ', actions)
-    # print("{:.0f} ms - total".format((perf_counter() - start_time)*1e3))
-    # print()
 
     prev_board = board
 
