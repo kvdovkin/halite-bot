@@ -34,7 +34,7 @@ Alive ships of each player over the course of the game
 Attack ships of each player over the course of the game  
 
 ## Setup and requirements
- - [Python 3.8+](python.org)
+ - [Python 3.8+](https://python.org)
  - Run `pip install -r requirements.txt`
  
 ## Running the simulation and building graphs
