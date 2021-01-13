@@ -1,0 +1,6 @@
+kaggle-environments==1.7.3
+numpy==1.19.4
+torch==1.7.1
+scipy==1.5.4
+matplotlib==3.3.3
+ipython==7.19.0
