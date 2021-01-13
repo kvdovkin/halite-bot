@@ -23,13 +23,18 @@ HALITE_BOT_ORDER_COLOR = [
 ]
 
 
-# количество шагов для запуска симуляции - стратегия бота
-# имеет смысл только в том случае, если это 400, что было его значением во время
-# конкурс на kaggle.com
-STEPS = 400
-
-
 def main():
+    argv = sys.argv
+    argc = len(argv)
+
+    if (argc != 2 or not argv[1].isdigit()):
+        print("\"steps\" parameter not passed or is a string.\nExample usage: 'python run.py 400'")
+        exit(1)
+    elif (int(argv[1]) > 400):
+        print("Warning: you shouldn't attempt to run games with more than 400 steps")
+        
+    steps = int(argv[1])
+
     # вставить сюда путь к репозиторию из рабочего каталога
     path = os.curdir
     greedy_bot = os.path.join(
@@ -71,11 +76,11 @@ def main():
 
     # получить симулятор галита из окружения kaggle и запустить симуляцию
     if seed is not None:
-        print(f"Running for {STEPS} steps with seed = {seed}...")
-        config = {"randomSeed": seed, "episodeSteps": STEPS}
+        print(f"Running for {steps} steps with seed = {seed}...")
+        config = {"randomSeed": seed, "episodeSteps": steps}
     else:
-        print(f"Running for {STEPS} steps...")
-        config = {"episodeSteps": STEPS}
+        print(f"Running for {steps} steps...")
+        config = {"episodeSteps": steps}
 
     print("Setting up bots...")
     print()
@@ -99,12 +104,14 @@ def main():
     sys.path.remove(si_src)
     sys.path.remove(q_src)
 
-    print("Done.")
+    print("Simulation done.\n")
 
     return
 
 
 def make_graphs(played_match, bot_names):
+    print(f"Generating graphs based on {len(played_match)} steps...\n")
+
     total_halite_during_match(played_match, bot_names)
     plt.clf()
 
