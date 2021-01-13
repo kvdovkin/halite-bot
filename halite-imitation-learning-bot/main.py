@@ -487,7 +487,7 @@ model = Unet(encoder_name="efficientnet-b0", classes=5, encoder_depth=2, decoder
 
 print("Loading weights (weights.pth). {:.0f} ms - Stage H".format((perf_counter() - start_time)*1e3))
 
-model.load_state_dict(torch.load("halite-machine-learning-bot/weights.pth", torch.device(device))['model_state_dict'])
+model.load_state_dict(torch.load("halite-imitation-learning-bot/weights.pth", torch.device(device))['model_state_dict'])
 model.to(device)
 model.eval();
 torch.no_grad();
