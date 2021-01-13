@@ -16,7 +16,7 @@ Bots
 | ---------------------------------------------------------------------------|:----------------:| :----------------------------------------:| -----:|
 | #1: ![#E2CD13](https://via.placeholder.com/15/E2CD13/000000?text=+) Yellow | Greedy Algorithm | [source](./halite-greedy-algorithm-bot/)  | ~1K |
 | #2: ![#F24E4E](https://via.placeholder.com/15/F24E4E/000000?text=+) Red    | Machine Learning | [source](./halite-imitation-learning-bot/)| ~2.4K |
-| #3: ![#34BB1C](https://via.placeholder.com/15/34BB1C/000000?text=+) Green    | Defensive Greedy Algorithm | [source](./halite-defensive-greedy-algorithm-bot/)| ~4.4K |
+| #3: ![#34BB1C](https://via.placeholder.com/15/34BB1C/000000?text=+) Green    | Defensive Greedy Algorithm | [source](./halite-defensive-greedy-bot/)| ~4.4K |
 | #4: ![#7B33E2](https://via.placeholder.com/15/7B33E2/000000?text=+) Purple    | Q-Learning | [source](./halite-q-learning-bot/)| ~1.3K |
 
 ## Analysis
