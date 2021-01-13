@@ -21,17 +21,17 @@ Bots
 
 ## Analysis
 
-#### Halite amount
-Halite amount of each player over the course of the game
-![Halite amount of each player over the course of the game](analysis/graph_total_halite_during_match.png)
+#### Halite amount  
+![Halite amount of each player over the course of the game](analysis/graph_total_halite_during_match.png)  
+Halite amount of each player over the course of the game  
 
-#### Alive ships
-Alive ships of each player over the course of the game
-![](analysis/graph_total_ships_during_match.png)
+#### Alive ships  
+![Alive ships of each player over the course of the game](analysis/graph_total_ships_during_match.png)  
+Alive ships of each player over the course of the game  
 
-#### Attack ships
-Attack ships of each player over the course of the game
-![](analysis/graph_total_attack_ships_during_match.png)
+#### Attack ships  
+![Attack ships of each player over the course of the game](analysis/graph_total_attack_ships_during_match.png)  
+Attack ships of each player over the course of the game  
 
 ## Setup and requirements
  - [Python 3.8+](python.org)
